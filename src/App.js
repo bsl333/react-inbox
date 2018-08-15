@@ -90,7 +90,7 @@ class App extends Component {
   onSelectedApplyLabel = (e) => {
     const label = e.target.value
     if (label === 'Apply label') return
-    
+
     const updatedMessages = this.state.messages.map(message => {
       if (message.selected && !message.labels.includes(label)) {
         message.labels = [...message.labels, label]
@@ -117,7 +117,15 @@ class App extends Component {
     })
   }
 
+  calculateUnreadMessages = () => {
+    return this.state.messages.reduce((acc, mes) => !mes.read ? ++acc: acc, 0)
+  }
 
+  setCheckBoxLogo = () => {
+    if (this.state.messages.every(message => message.selected)) return 'fa-check-square-o'
+    if (this.state.messages.every(message => !message.selected)) return 'fa-square-o'
+    else return 'fa-minus-square-o'
+  }
 
 
   toolbarActions = {
@@ -126,7 +134,9 @@ class App extends Component {
     onMarkSelectedRead: this.onMarkSelectedRead,
     onMarkSelectedUnread: this.onMarkSelectedUnread,
     onSelectedApplyLabel: this.onSelectedApplyLabel,
-    onSelectedRemoveLabel: this.onSelectedRemoveLabel
+    onSelectedRemoveLabel: this.onSelectedRemoveLabel,
+    calculateUnreadMessages: this.calculateUnreadMessages,
+    setCheckBoxLogo: this.setCheckBoxLogo
   }
 }
 

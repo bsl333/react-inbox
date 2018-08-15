@@ -4,17 +4,19 @@ class Toolbar extends Component {
   constructor(props) {
     super(props)
   }
+
+  
   render() {
     return (
       <div className="row toolbar">
         <div className="col-md-12">
           <p className="pull-right">
-            <span className="badge badge">2</span>
-            unread messages
+            <span className="badge badge">{this.props.calculateUnreadMessages()}</span>
+            unread message{this.props.calculateUnreadMessages() !== 1 ? 's' : ''}
           </p>
 
           <button className="btn btn-default" onClick={this.props.onSelectAllMessages}>
-            <i className="fa fa-check-square-o"></i>
+            <i className={`fa ${this.props.setCheckBoxLogo()}`}></i>
           </button>
 
           <button className="btn btn-default" onClick={this.props.onMarkSelectedRead}>
