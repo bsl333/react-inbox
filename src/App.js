@@ -19,8 +19,8 @@ class App extends Component {
   render() {
     return (
       <div className="container">
-        <Toolbar /> 
-        <MessageList messages={this.state.messages} onStarClicked={this.onStarClicked}/>
+        <Toolbar {...this.toolbarActions} />
+        <MessageList messages={this.state.messages} onStarClicked={this.onStarClicked} onCheckboxClicked={this.onCheckboxClicked} />
       </div>
     );
   }
@@ -33,6 +33,100 @@ class App extends Component {
     this.setState({
       messages: updatedMessages
     })
+  }
+
+  onCheckboxClicked = (id) => {
+    const updateMessages = this.state.messages.map(message => {
+      if (message.id === id) message.selected = !message.selected
+      return message
+    })
+    this.setState({
+      messages: updateMessages
+    })
+  }
+
+  onSelectAllMessages = () => {
+    if (this.state.messages.every(message => message.selected)) {
+      this.setState({
+        messages: this.state.messages.map(message => {
+          message.selected = false
+          return message
+        })
+      })
+    } else {
+      this.setState({
+        messages: this.state.messages.map(message => {
+          message.selected = true
+          return message
+        })
+      })
+    }
+  }
+
+  onDeleteSelected = () => {
+    this.setState({
+      messages: this.state.messages.filter(message => !message.selected)
+    })
+  }
+
+  onMarkSelectedRead = () => {
+    this.setState({
+      messages: this.state.messages.map(message => {
+        message.read = message.selected ? true : message.read
+        return message
+      })
+    })
+  }
+
+  onMarkSelectedUnread = () => {
+    this.setState({
+      messages: this.state.messages.map(message => {
+        message.read = message.selected ? false : message.read
+        return message
+      })
+    })
+  }
+
+  onSelectedApplyLabel = (e) => {
+    const label = e.target.value
+    if (label === 'Apply label') return
+    
+    const updatedMessages = this.state.messages.map(message => {
+      if (message.selected && !message.labels.includes(label)) {
+        message.labels = [...message.labels, label]
+      }
+      return message
+    })
+
+    this.setState({
+      messages: updatedMessages
+    })
+  }
+
+  onSelectedRemoveLabel = (e) => {
+    const label = e.target.value
+    const updatedMessages = this.state.messages.map(message => {
+      if (message.selected && message.labels.includes(label)) {
+        message.labels = message.labels.filter(val => val !== label)
+      }
+      return message
+    })
+
+    this.setState({
+      messages: updatedMessages
+    })
+  }
+
+
+
+
+  toolbarActions = {
+    onDeleteSelected: this.onDeleteSelected,
+    onSelectAllMessages: this.onSelectAllMessages,
+    onMarkSelectedRead: this.onMarkSelectedRead,
+    onMarkSelectedUnread: this.onMarkSelectedUnread,
+    onSelectedApplyLabel: this.onSelectedApplyLabel,
+    onSelectedRemoveLabel: this.onSelectedRemoveLabel
   }
 }
 

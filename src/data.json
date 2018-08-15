@@ -56,5 +56,12 @@
     "read": true,
     "starred": true,
     "labels": []
+  },
+  {
+    "id": 9,
+    "subject": "Hey it's Chris Peterson -- Can we connect on LinkedIn?",
+    "read": true,
+    "starred": true,
+    "labels": ["SPAM"]
   }
 ]
