@@ -19,7 +19,7 @@ class App extends Component {
   render() {
     return (
       <div className="container">
-        <Toolbar {...this.toolbarActions} />
+        <Toolbar {...this.toolbarActions} checkboxLogo={this.setCheckBoxLogo()} />
         <MessageList messages={this.state.messages} onStarClicked={this.onStarClicked} onCheckboxClicked={this.onCheckboxClicked} />
       </div>
     );
@@ -89,9 +89,7 @@ class App extends Component {
 
   onSelectedApplyLabel = (e) => {
     const label = e.target.value
-    console.log(e.target)
-    
-    // if (label === 'Apply label') return
+    if (label === 'Apply label') return
 
     const updatedMessages = this.state.messages.map(message => {
       if (message.selected && !message.labels.includes(label)) {
@@ -120,7 +118,7 @@ class App extends Component {
   }
 
   calculateUnreadMessages = () => {
-    return this.state.messages.reduce((acc, mes) => !mes.read ? ++acc: acc, 0)
+    return this.state.messages.reduce((acc, mes) => !mes.read ? ++acc : acc, 0)
   }
 
   setCheckBoxLogo = () => {
@@ -137,8 +135,7 @@ class App extends Component {
     onMarkSelectedUnread: this.onMarkSelectedUnread,
     onSelectedApplyLabel: this.onSelectedApplyLabel,
     onSelectedRemoveLabel: this.onSelectedRemoveLabel,
-    calculateUnreadMessages: this.calculateUnreadMessages,
-    setCheckBoxLogo: this.setCheckBoxLogo
+    calculateUnreadMessages: this.calculateUnreadMessages
   }
 }
 

@@ -25,7 +25,7 @@ const Message = ({ id, subject, read, starred, labels, selected, onStarClicked, 
         </div>
       </div>
       <div className="col-xs-11">
-        {labels.map(label => <Label key={`${Math.random()*100}`} label={label}/>)}
+        {labels.map((label,i) => <Label key={i} label={label}/>)}
         <a href="#">
           {subject}
         </a>

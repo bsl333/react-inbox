@@ -16,7 +16,7 @@ class Toolbar extends Component {
           </p>
 
           <button className="btn btn-default" onClick={this.props.onSelectAllMessages}>
-            <i className={`fa ${this.props.setCheckBoxLogo()}`}></i>
+            <i className={`fa ${this.props.checkboxLogo}`}></i>
           </button>
 
           <button className="btn btn-default" onClick={this.props.onMarkSelectedRead}>
