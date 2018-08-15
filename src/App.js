@@ -89,7 +89,9 @@ class App extends Component {
 
   onSelectedApplyLabel = (e) => {
     const label = e.target.value
-    if (label === 'Apply label') return
+    console.log(e.target)
+    
+    // if (label === 'Apply label') return
 
     const updatedMessages = this.state.messages.map(message => {
       if (message.selected && !message.labels.includes(label)) {
