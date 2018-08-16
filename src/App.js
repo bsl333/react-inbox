@@ -19,7 +19,7 @@ class App extends Component {
   render() {
     return (
       <div className="container">
-        <Toolbar {...this.toolbarActions} checkboxLogo={this.setCheckBoxLogo()} />
+        <Toolbar {...this.toolbarActions} />
         <MessageList messages={this.state.messages} onStarClicked={this.onStarClicked} onCheckboxClicked={this.onCheckboxClicked} />
       </div>
     );
@@ -127,6 +127,10 @@ class App extends Component {
     else return 'fa-minus-square-o'
   }
 
+  noMessagesSelected = () => {
+    return this.state.messages.every(message => !message.selected)
+  }
+
 
   toolbarActions = {
     onDeleteSelected: this.onDeleteSelected,
@@ -135,7 +139,9 @@ class App extends Component {
     onMarkSelectedUnread: this.onMarkSelectedUnread,
     onSelectedApplyLabel: this.onSelectedApplyLabel,
     onSelectedRemoveLabel: this.onSelectedRemoveLabel,
-    calculateUnreadMessages: this.calculateUnreadMessages
+    calculateUnreadMessages: this.calculateUnreadMessages,
+    checkboxLogo: this.setCheckBoxLogo,
+    isDisabled: this.noMessagesSelected
   }
 }
 
