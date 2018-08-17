@@ -5,7 +5,7 @@ class Toolbar extends Component {
     super(props)
   }
 
-  
+
   render() {
     return (
       <div className="row toolbar">
@@ -14,6 +14,10 @@ class Toolbar extends Component {
             <span className="badge badge">{this.props.calculateUnreadMessages()}</span>
             unread message{this.props.calculateUnreadMessages() !== 1 ? 's' : ''}
           </p>
+
+          <a className="btn btn-danger" onClick={this.props.toggleShowComposeMessage}>
+            <i className="fa fa-plus"></i>
+          </a>
 
           <button className="btn btn-default" onClick={this.props.onSelectAllMessages}>
             <i className={`fa ${this.props.checkboxLogo()}`}></i>

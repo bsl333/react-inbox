@@ -5,6 +5,7 @@ import axios from 'axios'
 // React Comps
 import Toolbar from './components/Toolbar';
 import MessageList from './components/MessageList'
+import ComposeMessage from './components/ComposeMessage'
 
 // Message data
 import messages from './data.json';
@@ -15,17 +16,38 @@ class App extends Component {
     super(props)
 
     this.state = {
-      messages
+      messages,
+      showForm: false
     }
   }
 
   render() {
     return (
       <div className="container">
-        <Toolbar {...this.toolbarActions} />
+        <Toolbar {...this.toolbarActions} toggleShowComposeMessage={this.toggleShowComposeMessage} />
+        {this.state.showForm ? <ComposeMessage sendMessage={this.sendMessage}/> : <span></span>}
         <MessageList messages={this.state.messages} onStarClicked={this.onStarClicked} onCheckboxClicked={this.onCheckboxClicked} />
       </div>
     );
+  }
+
+  toggleShowComposeMessage = () => {
+    this.setState({
+      showForm: !this.state.showForm
+    })
+  }
+
+  sendMessage = async (e) => {
+    e.preventDefault()
+    const subject = e.target.subject.value
+    const body = e.target.body.value
+    try {
+      await axios.post(`${apiUrl}/messages`, {subject, body})
+    } catch (e) {
+      console.error(e)  
+    } finally {
+      await this.getMessages()
+    }
   }
 
 
@@ -37,15 +59,18 @@ class App extends Component {
     try {
       const messagesResp = await axios.get(`${apiUrl}/messages`)
       const messages = messagesResp.data
-      this.setState(prevState => {
-        const updatedMessages = messages.map(message => {
-          message.selected = prevState.messages.find(prevMes => prevMes.id === message.id).selected
-          return message
-        })
-        return {
-          messages: updatedMessages
-        }
+      this.setState({
+        messages
       })
+      // this.setState(prevState => {
+      //   const updatedMessages = messages.map(message => {
+      //     message.selected = prevState.messages.find(prevMes => prevMes.id === message.id).selected
+      //     return message
+      //   })
+      //   return {
+      //     messages: updatedMessages
+      //   }
+      // })
     } catch (e) {
       console.error(e)
     }
@@ -92,16 +117,12 @@ class App extends Component {
   onDeleteSelected = async () => {
     try {
       const messageIds = this.getSelectedMessagesIds()
-      await axios.patch(`${apiUrl}/messages`, { messageIds, command: 'delete'})
+      await axios.patch(`${apiUrl}/messages`, { messageIds, command: 'delete' })
     } catch (e) {
       console.error(e)
     } finally {
       await this.getMessages()
     }
-    
-    // this.setState({
-    //   messages: this.state.messages.filter(message => !message.selected)
-    // })
   }
 
   onMarkSelectedRead = async () => {
@@ -113,13 +134,6 @@ class App extends Component {
     } finally {
       await this.getMessages()
     }
-
-    // this.setState({
-    //   messages: this.state.messages.map(message => {
-    //     message.read = message.selected ? true : message.read
-    //     return message
-    //   })
-    // })
   }
 
   onMarkSelectedUnread = async () => {
@@ -131,19 +145,12 @@ class App extends Component {
     } finally {
       this.getMessages()
     }
-
-    // this.setState({
-    //   messages: this.state.messages.map(message => {
-    //     message.read = message.selected ? false : message.read
-    //     return message
-    //   })
-    // })
   }
 
   onSelectedApplyLabel = async (e) => {
     try {
       const label = e.target.value
-      if (label === 'Apply label') return 
+      if (label === 'Apply label') return
       const messageIds = this.getSelectedMessagesIds()
       await axios.patch(`${apiUrl}/messages`, { messageIds, command: 'addLabel', label })
     } catch (e) {
@@ -151,19 +158,6 @@ class App extends Component {
     } finally {
       await this.getMessages()
     }
-    // const label = e.target.value
-    // if (label === 'Apply label') return
-
-    // const updatedMessages = this.state.messages.map(message => {
-    //   if (message.selected && !message.labels.includes(label)) {
-    //     message.labels = [...message.labels, label]
-    //   }
-    //   return message
-    // })
-
-    // this.setState({
-    //   messages: updatedMessages
-    // })
   }
 
   onSelectedRemoveLabel = async (e) => {
@@ -176,17 +170,6 @@ class App extends Component {
     } finally {
       await this.getMessages()
     }
-    // const label = e.target.value
-    // const updatedMessages = this.state.messages.map(message => {
-    //   if (message.selected && message.labels.includes(label)) {
-    //     message.labels = message.labels.filter(val => val !== label)
-    //   }
-    //   return message
-    // })
-
-    // this.setState({
-    //   messages: updatedMessages
-    // })
   }
 
   calculateUnreadMessages = () => {
